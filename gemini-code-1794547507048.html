@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syed Shah Wajid | White Hat Hacker & Student Portfolio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        :root {
+            --primary: #00ff88;
+            --primary-glow: rgba(0, 255, 136, 0.4);
+            --secondary: #00bfff;
+            --accent: #9d4edd;
+            --dark-glass: rgba(10, 15, 30, 0.75);
+            --card-glass: rgba(20, 30, 55, 0.65);
+            --border-glass: rgba(0, 255, 136, 0.25);
+            --text-main: #f0f4f8;
+            --text-muted: #94a3b8;
+            --font-main: 'Outfit', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #030712;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Background for Virtual Robot & Hackers */
+        #cyber-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: #030712;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-nav {
+            background: rgba(5, 10, 25, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 12px 40px 0 rgba(0, 255, 136, 0.2);
+            transform: translateY(-4px);
+        }
+
+        /* Navigation Bar */
+        navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+        }
+
+        .logo {
+            font-family: var(--font-code);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        header.hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem 2rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            font-family: var(--font-code);
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-glass);
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .quick-id-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .id-pill {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .id-pill i {
+            color: var(--secondary);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #030712;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #00cc6a;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-title h2 i {
+            color: var(--primary);
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* About & Scouting Grid */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .about-card {
+            padding: 2.5rem;
+        }
+
+        .about-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .about-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+        }
+
+        .subjects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .subject-tag {
+            background: rgba(0, 191, 255, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Timeline Roadmap */
+        .roadmap {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border-glass);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.55rem;
+            top: 0.3rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-card {
+            padding: 1.8rem;
+        }
+
+        .timeline-card span {
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .timeline-card h4 {
+            font-size: 1.3rem;
+            margin: 0.4rem 0 0.8rem 0;
+        }
+
+        .timeline-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Skills Matrix */
+        .skills-filter {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #030712;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            padding: 1.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .skill-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .skill-info p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Projects & Gallery */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-img-container {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-img-container img {
+            transform: scale(1.08);
+        }
+
+        .project-tag-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-glass);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: var(--font-code);
+            color: var(--primary);
+        }
+
+        .project-content {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .project-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Photo Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid var(--border-glass);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.06);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(to top, rgba(3, 7, 18, 0.95), transparent);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h5 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Interactive Map Section */
+        .map-section-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media(max-width: 900px) {
+            .map-section-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            z-index: 10;
+        }
+
+        .location-info-card {
+            padding: 2.5rem;
+        }
+
+        .location-info-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .location-details-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .location-details-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .location-details-list i {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .map-mode-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-card {
+            padding: 2.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .contact-details h4 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-details a, .contact-details span {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            color: var(--primary);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-top: 0.3rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: #030712;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-glass);
+            background: rgba(3, 7, 18, 0.9);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer span {
+            color: var(--primary);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            width: 90%;
+            max-width: 600px;
+            padding: 2.5rem;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--primary);
+            color: #030712;
+        }
+
+        .modal-box img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-glass);
+        }
+
+        .modal-box h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .modal-box p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(3, 7, 18, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                transition: left 0.3s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Virtual Robot & Hacker Canvas Background -->
+    <canvas id="cyber-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <navbar class="glass-nav">
+        <a href="#hero" class="logo">
+            <i class="fa-solid fa-shield-halved"></i> WHITE HAT.HACKER
+        </a>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About & Scouts</a></li>
+            <li><a href="#roadmap">Journey</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#location">Location</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </navbar>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero">
+        <div class="hero-badge">
+            <i class="fa-solid fa-terminal"></i> ASPIRING CYBER SECURITY SPECIALIST
+        </div>
+        <h1>Hi, I'm <span>Syed Shah Wajid</span></h1>
+        <p>A passionate school student & tech enthusiast building modern web applications, exploring Linux systems, building games, and scouting outdoors.</p>
+        
+        <div class="quick-id-bar">
+            <div class="id-pill"><i class="fa-solid fa-school"></i> NKM High School and Homes</div>
+            <div class="id-pill"><i class="fa-solid fa-location-dot"></i> Dhaka, Bangladesh</div>
+            <div class="id-pill"><i class="fa-solid fa-campground"></i> Scouts ID: ZK2044</div>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="#projects" class="btn btn-primary">
+                <i class="fa-solid fa-code"></i> View My Projects
+            </a>
+            <a href="#contact" class="btn btn-outline">
+                <i class="fa-solid fa-paper-plane"></i> Get in Touch
+            </a>
+        </div>
+    </header>
+
+    <!-- About Me Section -->
+    <section id="about" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-user-astronaut"></i> About Me & Scouting</h2>
+            <p>Discover my student life, favorite subjects, and outdoor adventures.</p>
+        </div>
+
+        <div class="about-grid">
+            <div class="glass-card about-card">
+                <h3><i class="fa-solid fa-graduation-cap"></i> Student Life & Studies</h3>
+                <p>I am a running student at <strong>NKM High School and Homes</strong> in Dhaka, Bangladesh. I love challenging my mind and understanding how things work under the hood.</p>
+                <p>My absolute favorite academic subjects are:</p>
+                <div class="subjects-list">
+                    <span class="subject-tag"><i class="fa-solid fa-calculator"></i> Mathematics</span>
+                    <span class="subject-tag"><i class="fa-solid fa-flask"></i> Science</span>
+                    <span class="subject-tag"><i class="fa-solid fa-book-open"></i> English</span>
+                </div>
+            </div>
+
+            <div class="glass-card about-card">
+                <h3><i class="fa-solid fa-campground"></i> Bangladesh Scouts (ZK2044)</h3>
+                <p>I am an active and proud member of the <strong>Bangladesh Scouts</strong> with Scout ID: <strong>ZK2044</strong>.</p>
+                <p>Camping, outdoor survival, teamwork, and community service are my greatest hobbies. Scouting has taught me discipline, leadership, and resilience that I apply to my technology journey every single day.</p>
+                <div class="subjects-list">
+                    <span class="subject-tag"><i class="fa-solid fa-fire"></i> Camping & Hiking</span>
+                    <span class="subject-tag"><i class="fa-solid fa-shield"></i> Discipline & Service</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Roadmap Timeline -->
+    <section id="roadmap" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-road"></i> Learning Journey</h2>
+            <p>From foundational sciences to ethical hacking and web engineering.</p>
+        </div>
+
+        <div class="roadmap">
+            <div class="timeline-item">
+                <div class="glass-card timeline-card">
+                    <span>Phase 01</span>
+                    <h4>Foundational Academics & Logic</h4>
+                    <p>Building strong analytical skills through Mathematics and Science at NKM High School and Homes, coupled with logical problem solving.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="glass-card timeline-card">
+                    <span>Phase 02</span>
+                    <h4>Scratch & Mini Game Creation</h4>
+                    <p>Designed and programmed interactive games using Scratch, learning event loops, collision detection, and game mechanics.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="glass-card timeline-card">
+                    <span>Phase 03</span>
+                    <h4>Web Development & Networking</h4>
+                    <p>Mastered HTML, CSS, and JavaScript to build responsive web apps, alongside experimenting with computer networking and IP routing.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="glass-card timeline-card">
+                    <span>Phase 04</span>
+                    <h4>Linux Command Line & Cyber Security</h4>
+                    <p>Transitioned to working with Linux operating systems (CLI, shell scripting, permissions) with the ultimate goal of becoming a White Hat Cyber Security Specialist.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-microchip"></i> Skills & Expertise</h2>
+            <p>Technologies, tools, and disciplines I practice and study.</p>
+        </div>
+
+        <div class="skills-filter">
+            <button class="filter-btn active" data-filter="all">All Skills</button>
+            <button class="filter-btn" data-filter="web">Web & Games</button>
+            <button class="filter-btn" data-filter="cyber">Linux & Cyber</button>
+            <button class="filter-btn" data-filter="network">Networking</button>
+            <button class="filter-btn" data-filter="scouts">Academics & Scouts</button>
+        </div>
+
+        <div class="skills-grid">
+            <div class="glass-card skill-card" data-category="web">
+                <div class="skill-icon"><i class="fa-brands fa-html5"></i></div>
+                <div class="skill-info">
+                    <h4>HTML5 & CSS3</h4>
+                    <p>Structuring semantic web documents and crafting modern responsive layouts with Flexbox and Grid.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="web">
+                <div class="skill-icon"><i class="fa-brands fa-js"></i></div>
+                <div class="skill-info">
+                    <h4>JavaScript (ES6+)</h4>
+                    <p>Adding dynamic interactivity, DOM manipulation, animations, and game logic.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="web">
+                <div class="skill-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="skill-info">
+                    <h4>Scratch Game Dev</h4>
+                    <p>Building creative block-based mini games, physics simulations, and interactive stories.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="web">
+                <div class="skill-icon"><i class="fa-solid fa-cube"></i></div>
+                <div class="skill-info">
+                    <h4>Simple Web Games</h4>
+                    <p>Developing browser-based JavaScript mini games with custom canvas graphics and score tracking.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="cyber">
+                <div class="skill-icon"><i class="fa-brands fa-linux"></i></div>
+                <div class="skill-info">
+                    <h4>Linux Operating System</h4>
+                    <p>Operating daily in Linux terminal environments, file management, package installation, and shell commands.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="cyber">
+                <div class="skill-icon"><i class="fa-solid fa-user-secret"></i></div>
+                <div class="skill-info">
+                    <h4>Cyber Security Basics</h4>
+                    <p>Studying defensive security principles, vulnerability concepts, and ethical hacking fundamentals.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="network">
+                <div class="skill-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <div class="skill-info">
+                    <h4>Computer Networking</h4>
+                    <p>Understanding TCP/IP models, routers, switches, IP addressing, and packet routing.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="network">
+                <div class="skill-icon"><i class="fa-solid fa-ethernet"></i></div>
+                <div class="skill-info">
+                    <h4>LAN & Cabling</h4>
+                    <p>Setting up local network connections, configuring Wi-Fi routers, and troubleshooting connectivity.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="scouts">
+                <div class="skill-icon"><i class="fa-solid fa-calculator"></i></div>
+                <div class="skill-info">
+                    <h4>Mathematics & Science</h4>
+                    <p>Strong foundation in algebra, geometry, physics, and scientific experimentation.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="scouts">
+                <div class="skill-icon"><i class="fa-solid fa-campground"></i></div>
+                <div class="skill-info">
+                    <h4>Scout Camping & Survival</h4>
+                    <p>Experienced in outdoor camp setup, knot tying, first aid readiness, and wilderness teamwork.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="scouts">
+                <div class="skill-icon"><i class="fa-solid fa-language"></i></div>
+                <div class="skill-info">
+                    <h4>English Proficiency</h4>
+                    <p>Strong verbal and written communication skills in English for global technical documentation.</p>
+                </div>
+            </div>
+
+            <div class="skill-card glass-card" data-category="web">
+                <div class="skill-icon"><i class="fa-solid fa-code-branch"></i></div>
+                <div class="skill-info">
+                    <h4>Git & Version Control</h4>
+                    <p>Tracking code changes, managing repositories, and publishing projects online.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects & Labs Section -->
+    <section id="projects" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-laptop-code"></i> Projects & Labs</h2>
+            <p>Real projects showcasing my web development, gaming, Linux, and networking work.</p>
+        </div>
+
+        <div class="projects-grid">
+            <!-- Project 1 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Linux Terminal Lab">
+                    <span class="project-tag-badge">Linux & CLI</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Linux Terminal Security Lab</h3>
+                        <p>A custom Linux shell environment setup configured with security auditing scripts, user permissions, and log analysis tools.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Linux Terminal Security Lab', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80', 'This project involves hands-on configuration of Linux terminal environments. As an aspiring white hat hacker, I use Linux daily to manage files, run network diagnostic tools, write bash scripts, and understand system hardening.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80" alt="Networking Lab">
+                    <span class="project-tag-badge">Networking</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Home Lab & Ethernet Switching</h3>
+                        <p>Configured local network subnets, tested router firewall rules, and wired Ethernet connections for robust internet routing.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Home Lab & Ethernet Switching', 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80', 'A practical networking project where I mapped out local IP addresses, tested packet latency with ping tests, secured router administrative panels, and organized physical ethernet cables for optimal performance.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Web Game">
+                    <span class="project-tag-badge">JavaScript Game</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Simple Browser Web Game</h3>
+                        <p>An interactive JavaScript canvas game featuring keyboard controls, collision physics, scoring, and dynamic difficulty levels.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Simple Browser Web Game', 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80', 'Built purely with HTML5 Canvas, CSS, and JavaScript. This game features smooth animations, obstacle generation, high score storage in browser local storage, and responsive controls for both desktop and touch screens.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80" alt="Scratch Game Development">
+                    <span class="project-tag-badge">Scratch Game</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Scratch Adventure Game</h3>
+                        <p>A multi-level maze and puzzle game built in Scratch with custom sprite animations, scoring variables, and sound effects.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Scratch Adventure Game', 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80', 'Designed as a creative logic project, this Scratch game features custom-drawn characters, keyboard event listeners, score trackers, and interactive challenges that test player reflexes and problem-solving.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80" alt="Web Portfolio">
+                    <span class="project-tag-badge">Web Dev</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Responsive Personal Portfolio</h3>
+                        <p>A modern glassmorphism portfolio built with HTML, CSS, JavaScript, and interactive canvas graphics to showcase skills and contact info.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Responsive Personal Portfolio', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80', 'A fully responsive website featuring custom canvas animations, glassmorphism card design, interactive category filters, and seamless navigation for school and tech achievements.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project 6 -->
+            <div class="glass-card project-card">
+                <div class="project-img-container">
+                    <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Scout Camping">
+                    <span class="project-tag-badge">Bangladesh Scouts</span>
+                </div>
+                <div class="project-content">
+                    <div>
+                        <h3>Scouts Camp Expedition Log</h3>
+                        <p>Documentation of camping exercises, outdoor knot-tying demonstrations, campcraft, and teamwork drills under Bangladesh Scouts (ZK2044).</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openModal('Scouts Camp Expedition Log', 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80', 'As Scout ID ZK2044, outdoor camps teach me essential survival skills, leadership, camp cooking, and discipline that help me stay calm and focused in all technical challenges.')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real Photo Gallery -->
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openModal('Linux & Coding Workstation', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80', 'My primary environment for writing code, executing Linux terminal commands, and testing web applications.')">
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Linux Station">
+                <div class="gallery-overlay">
+                    <h5>Linux & Coding Station</h5>
+                    <p>Terminal & Editor</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openModal('Scout Camping & Tent Setup', 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80', 'Outdoor camping expedition with Bangladesh Scouts (ZK2044).')">
+                <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Scout Camp">
+                <div class="gallery-overlay">
+                    <h5>Scout Camping</h5>
+                    <p>Bangladesh Scouts ZK2044</p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openModal('Mathematics & Science Study Desk', 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80', 'Studying favorite subjects: Mathematics, Science, and English at NKM High School and Homes.')">
+                <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80" alt="Study Desk">
+                <div class="gallery-overlay">
+                    <h5>Math & Science Desk</h5>
+                    <p>NKM High School and Homes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Location Tracker Section -->
+    <section id="location" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-map-location-dot"></i> Live Location Tracker</h2>
+            <p>Locate my study base in Basail, Narsingdi, Dhaka, Bangladesh.</p>
+        </div>
+
+        <div class="map-section-wrapper">
+            <div class="glass-card location-info-card">
+                <h3><i class="fa-solid fa-crosshairs"></i> Basail, Narsingdi Base</h3>
+                <p>My current student and development headquarters are located in the heart of Bangladesh.</p>
+                
+                <ul class="location-details-list">
+                    <li><i class="fa-solid fa-map-pin"></i> <span><strong>Address:</strong> Basail, Narsingdi, Dhaka, Bangladesh</span></li>
+                    <li><i class="fa-solid fa-school"></i> <span><strong>Institution:</strong> NKM High School and Homes</span></li>
+                    <li><i class="fa-solid fa-campground"></i> <span><strong>Scouts Unit:</strong> Bangladesh Scouts (ID: ZK2044)</span></li>
+                    <li><i class="fa-solid fa-globe"></i> <span><strong>Coordinates:</strong> 23.9229° N, 90.7177° E</span></li>
+                </ul>
+
+                <div class="map-mode-buttons">
+                    <button class="btn btn-primary" onclick="focusBasailMap()">
+                        <i class="fa-solid fa-bullseye"></i> Locate Basail
+                    </button>
+                    <a href="https://maps.google.com/?q=Basail,+Narsingdi,+Dhaka,+Bangladesh" target="_blank" class="btn btn-outline">
+                        <i class="fa-solid fa-external-link-alt"></i> Open in Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <div class="map-container" id="leaflet-map"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-envelope-open-text"></i> Get In Touch</h2>
+            <p>Reach out to me for web development, school projects, or scouting collaborations.</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="glass-card contact-card">
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+                    <div class="contact-details">
+                        <h4>Phone Number</h4>
+                        <a href="tel:01348677168">01348677168</a>
+                        <br>
+                        <button class="copy-btn" onclick="copyText('01348677168', this)">
+                            <i class="fa-solid fa-copy"></i> Copy Phone
+                        </button>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="contact-details">
+                        <h4>Email Address</h4>
+                        <a href="mailto:wajidzk2044@gmail.com">wajidzk2044@gmail.com</a>
+                        <br>
+                        <button class="copy-btn" onclick="copyText('wajidzk2044@gmail.com', this)">
+                            <i class="fa-solid fa-copy"></i> Copy Email
+                        </button>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="contact-details">
+                        <h4>Address</h4>
+                        <span>Basail, Narsingdi, Dhaka, Bangladesh</span>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fa-solid fa-id-badge"></i></div>
+                    <div class="contact-details">
+                        <h4>Bangladesh Scouts ID</h4>
+                        <span>ZK2044 (NKM High School and Homes)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card contact-card">
+                <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <span>Syed Shah Wajid</span> | White Hat Hacker & Student Portfolio | NKM High School and Homes (Scouts ID: ZK2044)</p>
+    </footer>
+
+    <!-- Project / Gallery Modal -->
+    <div class="modal-overlay" id="projectModal" onclick="closeModalOnOutside(event)">
+        <div class="glass-card modal-box">
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <img id="modalImg" src="" alt="Project Preview">
+            <h3 id="modalTitle">Project Title</h3>
+            <p id="modalDesc">Project description goes here.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // --- Animated Virtual Robot & Hacker Background Canvas ---
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Floating cyber particles / matrix symbols
+        const particles = [];
+        const particleCount = 60;
+        const chars = ['0', '1', 'ZK2044', 'LINUX', 'ROOT', 'SEC', 'HTML', 'W'];
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                size: Math.random() * 14 + 10,
+                char: chars[Math.floor(Math.random() * chars.length)],
+                opacity: Math.random() * 0.5 + 0.1
+            });
+        }
+
+        // Draw animated background
+        function drawCyberScene() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Subtle gradient background
+            const bgGradient = ctx.createRadialGradient(width / 2, height / 2, 50, width / 2, height / 2, Math.max(width, height));
+            bgGradient.addColorStop(0, '#071124');
+            bgGradient.addColorStop(1, '#030712');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw grid lines for cyber feel
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.03)';
+            ctx.lineWidth = 1;
+            const gridSize = 40;
+            for (let x = 0; x < width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Draw Virtual Robot Head HUD at top center / parallax with mouse
+            const robotX = width / 2 + (mouseX - width / 2) * 0.03;
+            const robotY = height * 0.25 + (mouseY - height / 2) * 0.03;
+
+            // Outer HUD circles
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.15)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(robotX, robotY, 90, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(0, 191, 255, 0.12)';
+            ctx.beginPath();
+            ctx.arc(robotX, robotY, 120, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Robot Eyes glowing
+            const eyeOffset = 25;
+            const eyeGlow = ctx.createRadialGradient(robotX - eyeOffset, robotY, 2, robotX - eyeOffset, robotY, 25);
+            eyeGlow.addColorStop(0, '#00ff88');
+            eyeGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = eyeGlow;
+            ctx.beginPath();
+            ctx.arc(robotX - eyeOffset, robotY, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            const eyeGlow2 = ctx.createRadialGradient(robotX + eyeOffset, robotY, 2, robotX + eyeOffset, robotY, 25);
+            eyeGlow2.addColorStop(0, '#00ff88');
+            eyeGlow2.addColorStop(1, 'transparent');
+            ctx.fillStyle = eyeGlow2;
+            ctx.beginPath();
+            ctx.arc(robotX + eyeOffset, robotY, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Robot Visor line
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(robotX - 60, robotY - 15);
+            ctx.lineTo(robotX + 60, robotY - 15);
+            ctx.stroke();
+
+            // Hooded Hacker Silhouette outline effect on bottom right
+            const hackerX = width * 0.85 + (mouseX - width / 2) * 0.01;
+            const hackerY = height * 0.85;
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.04)';
+            ctx.beginPath();
+            ctx.arc(hackerX, hackerY - 40, 50, Math.PI, Math.PI * 2);
+            ctx.fill();
+
+            // Update and draw floating cyber particles
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+
+                ctx.fillStyle = `rgba(0, 255, 136, ${p.opacity})`;
+                ctx.font = `${p.size}px 'Fira Code', monospace`;
+                ctx.fillText(p.char, p.x, p.y);
+            });
+
+            requestAnimationFrame(drawCyberScene);
+        }
+        drawCyberScene();
+
+
+        // --- Leaflet Interactive Map Setup ---
+        // Coordinates for Basail, Narsingdi, Dhaka, Bangladesh
+        const basailLat = 23.9229;
+        const basailLng = 90.7177;
+
+        const map = L.map('leaflet-map').setView([basailLat, basailLng], 13);
+
+        // Dark/Cyber tile layer using CartoDB Dark Matter
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Custom pulsing marker for Basail, Narsingdi
+        const customIcon = L.divIcon({
+            className: 'custom-map-marker',
+            html: '<div style="background-color: #00ff88; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 15px #00ff88; border: 2px solid #030712;"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        const marker = L.marker([basailLat, basailLng], { icon: customIcon }).addTo(map);
+        marker.bindPopup("<b>Syed Shah Wajid's Base</b><br>Basail, Narsingdi, Dhaka, Bangladesh<br>NKM High School and Homes<br>Scouts ID: ZK2044").openPopup();
+
+        function focusBasailMap() {
+            map.setView([basailLat, basailLng], 15, { animate: true });
+            marker.openPopup();
+        }
+
+
+        // --- Mobile Menu Toggle ---
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.querySelector('i').classList.toggle('fa-bars');
+            hamburger.querySelector('i').classList.toggle('fa-xmark');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.querySelector('i').classList.add('fa-bars');
+                hamburger.querySelector('i').classList.remove('fa-xmark');
+            });
+        });
+
+
+        // --- Skills Filter ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const skillCards = document.querySelectorAll('.skill-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                skillCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+
+        // --- Modal Functions ---
+        function openModal(title, imgUrl, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalImg').src = imgUrl;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.remove('active');
+        }
+
+        function closeModalOnOutside(event) {
+            if (event.target.id === 'projectModal') {
+                closeModal();
+            }
+        }
+
+
+        // --- Copy to Clipboard Helper ---
+        function copyText(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                btnElement.style.background = '#00ff88';
+                btnElement.style.color = '#030712';
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                    btnElement.style.background = '';
+                    btnElement.style.color = '';
+                }, 2000);
+            });
+        }
+
+
+        // --- Contact Form Submission ---
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for your message! Syed Shah Wajid will receive your message shortly.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
